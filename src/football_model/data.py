@@ -3,12 +3,16 @@ import pandas as pd
 from datetime import datetime
 
 # previous used pinnacle, but earlier seasons don't have
-REQUIRED_COLS = ["Date", "HomeTeam", "AwayTeam", "FTHG", "FTAG", "FTR", "B365H", "B365D", "B365A"]
+REQUIRED_COLS = ["date", "home_team", "away_team", "home_goals", "away_goals", "result", "home_odds", 
+                "draw_odds", "away_odds", "max_home_odds", "max_draw_odds", "max_away_odds",
+                "avg_home_odds", "avg_draw_odds", "avg_away_odds"]
 
 
 COL_RENAME_MAP = {"Date" : "date", "HomeTeam": "home_team", "AwayTeam" : "away_team",
                  "FTHG" : "home_goals", "FTAG" : "away_goals", "FTR" : "result",
-                 "B365H" : "home_odds", "B365D" : "draw_odds", "B365A" : "away_odds"}
+                 "B365H" : "home_odds", "B365D" : "draw_odds", "B365A" : "away_odds", 
+                 "BbMxH" : "max_home_odds", "BbMxD" : "max_draw_odds", "BbMxA" : "max_away_odds",
+                 "BbAvH" : "avg_home_odds", "BbAvD" : "avg_draw_odds", "BbAvA" : "avg_away_odds"}
 
 def check_cols_exist(dataframe):
     missing_cols = [col for col in REQUIRED_COLS if col not in dataframe.columns]
@@ -22,10 +26,10 @@ def read_in(path):
         raise FileNotFoundError(f"{path} does not exist")
 
     dataframe = pd.read_csv(path)
+    dataframe = dataframe.rename(columns=COL_RENAME_MAP)
     check_cols_exist(dataframe)
 
     dataframe = dataframe[REQUIRED_COLS]
-    dataframe = dataframe.rename(columns=COL_RENAME_MAP)
 
     return dataframe
 
