@@ -1,15 +1,12 @@
-from xgboost import XGBClassifier
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
 
+def fit_multinomial(features, results, C=1.0):
+    model = Pipeline([("scaler", StandardScaler()), ("model", LogisticRegression(C=C))])
 
-def fit_xgboost(features, results):
-    result_map = {"A": 0, "D": 1, "H": 2}
-    encoded_results = results.map(result_map)
-
-    model = XGBClassifier(objective="multi:softprob", eval_metric="mlogloss", random_state=42)
-
-    model.fit(features, encoded_results)
+    model.fit(features, results)
     return model
 
-
-def predict_probabilities(model, features):
-    return model.predict_proba(features)
+def predict_probabilities(model, dataframe):
+    return model.predict_proba(dataframe)

@@ -107,11 +107,12 @@ def add_season(dataframe):
     return dataframe
 
 # should serve as final output bringing together all functions and returning train, test and validation
-def full_dateframe_and_split(paths, n_val_seasons = 2, n_test_seasons = 1):
+def full_dateframe_and_split(paths, n_train_ML_seasons = 2 ,n_val_seasons = 2, n_test_seasons = 1):
     train_seasons = []
     valid_seasons = []
     test_seasons = []
-    n_train_seasons = len(paths) - n_val_seasons - n_test_seasons
+    train_ML_seasons = []
+    n_train_seasons = len(paths) - n_val_seasons - n_test_seasons - n_train_ML_seasons
     for i, path in enumerate(paths):
         dataframe = read_in(path)
         dataframe, missing_vals = handle_missing_vals(dataframe)
@@ -123,7 +124,10 @@ def full_dateframe_and_split(paths, n_val_seasons = 2, n_test_seasons = 1):
         if i < n_train_seasons:
             train_seasons.append(dataframe)
 
-        elif (i >= n_train_seasons) & (i < n_train_seasons + n_val_seasons):
+        elif (i >= n_train_seasons) & (i < n_train_seasons + n_train_ML_seasons):
+            train_ML_seasons.append(dataframe)
+
+        elif (i >= n_train_seasons + n_train_ML_seasons) & (i < n_train_seasons + n_train_ML_seasons + n_val_seasons):
             valid_seasons.append(dataframe)
 
         else:
@@ -132,12 +136,15 @@ def full_dateframe_and_split(paths, n_val_seasons = 2, n_test_seasons = 1):
     df_test = pd.concat(test_seasons, ignore_index = True)
     df_valid = pd.concat(valid_seasons, ignore_index = True)
     df_train = pd.concat(train_seasons, ignore_index = True)
+    df_train_ML = pd.concat(train_ML_seasons, ignore_index= True)
 
     df_train = df_train.sort_values("date").reset_index(drop = True)
+    df_train_ML = df_train_ML.sort_values("date").reset_index(drop = True)
     df_valid = df_valid.sort_values("date").reset_index(drop = True)
     df_test = df_test.sort_values("date").reset_index(drop = True)
 
-    return df_train, df_valid, df_test
+
+    return df_train, df_train_ML, df_valid, df_test
 
 
 
