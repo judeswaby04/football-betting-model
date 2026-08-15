@@ -50,7 +50,7 @@ def log_likelihood(params, dataframe, home_goals_and_team, away_goals_and_team, 
 
 
      
-def atk_def_params(dataframe, phi = -np.log(0.9)/365.25,):
+def atk_def_params(dataframe, rho, phi = -np.log(0.9)/365.25):
     home_teams = sorted(list(dict.fromkeys(dataframe["home_team"])))
     away_teams = sorted(list(dict.fromkeys(dataframe["away_team"])))
     team_difference = (set(home_teams) - set(away_teams)) | (set(away_teams) - set(home_teams))
@@ -92,7 +92,7 @@ def atk_def_params(dataframe, phi = -np.log(0.9)/365.25,):
         
         return atk_coeff_sum - len(teams)
 
-    optimal_coeffs = minimize(log_likelihood, initial_params, args = (dataframe, home_goals_and_team, away_goals_and_team, teams, decays, 0.01), bounds = [(1e-6, 2)] * len(initial_params), constraints = {"type": "eq", "fun": norm_constraint_function})
+    optimal_coeffs = minimize(log_likelihood, initial_params, args = (dataframe, home_goals_and_team, away_goals_and_team, teams, decays, rho), bounds = [(1e-6, 2)] * len(initial_params), constraints = {"type": "eq", "fun": norm_constraint_function})
 
     coeffs = optimal_coeffs.x
     gamma = coeffs[-1]
@@ -109,7 +109,7 @@ def atk_def_params(dataframe, phi = -np.log(0.9)/365.25,):
     return df_atk_def_coeffs, float(gamma)
 
 
-def hda_odds(dataframe, df_atk_def_coeffs, gamma, rho=0.01):
+def hda_odds(dataframe, df_atk_def_coeffs, gamma, rho):
 
     home_odds = []
     draw_odds = []
