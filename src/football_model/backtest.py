@@ -33,13 +33,13 @@ def settle_bets(df_test, df_bets):
     for i in range(df_bets.shape[0]):
 
         if df_bets["Bet_Home"].iloc[i] == 1:
-            home_returns += (df_test["result"].iloc[i] == "H").astype(int) * df_test["home_odds"] - 1
+            home_returns += int(df_test["result"].iloc[i] == "H") * df_test["home_odds"].iloc[i] - 1
 
         if df_bets["Bet_Draw"].iloc[i] == 1:
-            draw_returns += (df_test["result"].iloc[i] == "D").astype(int) * df_test["draw_odds"] - 1
+            draw_returns += int(df_test["result"].iloc[i] == "D") * df_test["draw_odds"].iloc[i] - 1
         
         if df_bets["Bet_Away"].iloc[i] == 1:
-            away_returns += (df_test["result"].iloc[i] == "A").astype(int) * df_test["away_odds"] - 1
+            away_returns += int(df_test["result"].iloc[i] == "A") * df_test["away_odds"].iloc[i] - 1
 
     return home_returns + draw_returns + away_returns
 

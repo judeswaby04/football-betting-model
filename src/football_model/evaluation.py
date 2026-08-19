@@ -117,10 +117,13 @@ def decay_corr_optimiser(df_DC_train, df_DC_valid, max_rho = 0.1, min_rho = -0.1
     for rho in rhos:
         for decay in decays:
 
-            atk_def_coeffs = dc.atk_def_params(df_DC_train, rho,-np.log(1 - decay)/365.25)
-            df_hda_odds = dc.hda_odds(df_DC_valid, atk_def_coeffs[0], atk_def_coeffs[1], rho)
+            atk_def_coeffs = dc.atk_def_params(df_DC_train, rho, -np.log(1 - decay)/365.25)
 
-            log_losses[(rho,decay)] = log_loss(df_DC_valid, df_hda_odds)
+            df_DC_valid_clean, removed = dc.remove_unseen_teams(df_DC_valid, atk_def_coeffs[0])
+
+            df_hda_odds = dc.hda_odds(df_DC_valid_clean, atk_def_coeffs[0], atk_def_coeffs[1], rho)
+
+            log_losses[(rho, decay)] = log_loss(df_DC_valid_clean, df_hda_odds)
 
     best_params = min(log_losses, key = log_losses.get)
     best_loss = log_losses[best_params]

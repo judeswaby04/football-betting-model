@@ -8,11 +8,38 @@ REQUIRED_COLS = ["date", "home_team", "away_team", "home_goals", "away_goals", "
                 "avg_home_odds", "avg_draw_odds", "avg_away_odds"]
 
 
-COL_RENAME_MAP = {"Date" : "date", "HomeTeam": "home_team", "AwayTeam" : "away_team",
-                 "FTHG" : "home_goals", "FTAG" : "away_goals", "FTR" : "result",
-                 "B365H" : "home_odds", "B365D" : "draw_odds", "B365A" : "away_odds", 
-                 "BbMxH" : "max_home_odds", "BbMxD" : "max_draw_odds", "BbMxA" : "max_away_odds",
-                 "BbAvH" : "avg_home_odds", "BbAvD" : "avg_draw_odds", "BbAvA" : "avg_away_odds"}
+# COL_RENAME_MAP = {"Date" : "date", "HomeTeam": "home_team", "AwayTeam" : "away_team",
+#                  "FTHG" : "home_goals", "FTAG" : "away_goals", "FTR" : "result",
+#                  "B365H" : "home_odds", "B365D" : "draw_odds", "B365A" : "away_odds", 
+#                  "BbMxH" : "max_home_odds", "BbMxD" : "max_draw_odds", "BbMxA" : "max_away_odds",
+#                  "BbAvH" : "avg_home_odds", "BbAvD" : "avg_draw_odds", "BbAvA" : "avg_away_odds"}
+
+COL_RENAME_MAP = {
+    "Date": "date",
+    "HomeTeam": "home_team",
+    "AwayTeam": "away_team",
+    "FTHG": "home_goals",
+    "FTAG": "away_goals",
+    "FTR": "result",
+
+    "B365H": "home_odds",
+    "B365D": "draw_odds",
+    "B365A": "away_odds",
+
+    "BbMxH": "max_home_odds",
+    "BbMxD": "max_draw_odds",
+    "BbMxA": "max_away_odds",
+    "BbAvH": "avg_home_odds",
+    "BbAvD": "avg_draw_odds",
+    "BbAvA": "avg_away_odds",
+
+    "MaxH": "max_home_odds",
+    "MaxD": "max_draw_odds",
+    "MaxA": "max_away_odds",
+    "AvgH": "avg_home_odds",
+    "AvgD": "avg_draw_odds",
+    "AvgA": "avg_away_odds"
+}
 
 def check_cols_exist(dataframe):
     missing_cols = [col for col in REQUIRED_COLS if col not in dataframe.columns]
@@ -107,7 +134,7 @@ def add_season(dataframe):
     return dataframe
 
 # should serve as final output bringing together all functions and returning train, test and validation
-def full_dateframe_and_split(paths, n_val_DC_seasons=1, n_train_ML_seasons=2, n_val_ML_seasons=2, n_test_seasons=1):
+def full_dateframe_and_split(paths, n_val_DC_seasons=2, n_train_ML_seasons=5, n_val_ML_seasons=2, n_test_seasons=2):
     train_DC_seasons = []
     val_DC_seasons = []
     train_ML_seasons = []

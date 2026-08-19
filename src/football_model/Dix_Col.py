@@ -108,6 +108,18 @@ def atk_def_params(dataframe, rho, phi = -np.log(0.9)/365.25):
 
     return df_atk_def_coeffs, float(gamma)
 
+def remove_unseen_teams(dataframe, df_atk_def_coeffs):
+    known_teams = set(df_atk_def_coeffs["Team"])
+
+    valid_matches = (
+        dataframe["home_team"].isin(known_teams)
+        & dataframe["away_team"].isin(known_teams)
+    )
+
+    removed_matches = dataframe[~valid_matches].copy()
+    dataframe = dataframe[valid_matches].copy().reset_index(drop=True)
+
+    return dataframe, removed_matches
 
 def hda_odds(dataframe, df_atk_def_coeffs, gamma, rho):
 
